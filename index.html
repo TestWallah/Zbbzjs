@@ -3,406 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>English Topper App 🏆</title>
-    <meta name="theme-color" content="#0f172a">
+    <title>Topper OS 2026</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Tailwind CSS -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlRvcHBlciBPUyIsCiAgInNob3J0X25hbWUiOiAiVG9wcGVyIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwMDAwMDAiLAogICJ0aGVtZV9jb2xvciI6ICIjMDAwMDAwIiwKICAiaWNvbnMiOiBbXQp9">
+
+    <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Outfit', sans-serif;
-            user-select: none; /* App feel */
-        }
-
+        /* APP FEEL CSS */
         body {
+            font-family: 'Inter', sans-serif;
             background-color: #000;
-            color: white;
-            overflow: hidden; /* Prevent body scroll, handle inside app-shell */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: #fff;
+            overscroll-behavior: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Mobile Container to simulate App on Desktop */
-        #app-shell {
-            width: 100%;
-            height: 100%;
-            max-width: 480px; /* Mobile width cap */
-            background: #0f172a;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 50px rgba(79, 70, 229, 0.2);
-        }
-
-        /* Scrollable Content Area */
-        #content-area {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 90px; /* Space for bottom nav */
-            padding-top: 10px;
-        }
-
-        /* Hide Scrollbar */
-        #content-area::-webkit-scrollbar {
+        /* Hide Scrollbar but allow scroll */
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-
-        /* Animations */
-        .page-enter {
-            animation: slideIn 0.3s ease-out forwards;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Custom Checkbox */
-        .check-circle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid #6366f1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Neon Glows */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
-        .task-row.completed .check-circle {
-            background: #6366f1;
+        .neon-border {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        /* Checkbox Animation */
+        .check-box {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .check-box.checked {
+            background-color: #22c55e;
+            border-color: #22c55e;
             transform: scale(1.1);
         }
-        .task-row.completed h3 {
+
+        /* Task Completed Line */
+        .task-title {
+            transition: color 0.3s;
+        }
+        .checked-task .task-title {
             text-decoration: line-through;
-            color: #64748b;
+            color: #525252;
         }
 
-        /* Install Button Animation */
-        .install-pulse {
-            animation: pulse-glow 2s infinite;
+        /* Install Button Pulse */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
-        }
-
-        /* Glassmorphism */
-        .glass {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .install-anim {
+            animation: pulse-ring 2s infinite;
         }
 
-        /* Power Mode Styles */
-        .power-mode-bg {
-            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+        /* Bottom Nav Active State */
+        .nav-item.active {
+            color: #38bdf8;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            width: 4px;
+            height: 4px;
+            background: #38bdf8;
+            border-radius: 50%;
         }
     </style>
 </head>
-<body>
+<body class="h-screen flex flex-col overflow-hidden">
 
-    <div id="app-shell">
+    <!-- HEADER: Fixed Top -->
+    <header class="flex-none px-5 pt-12 pb-4 bg-black/80 backdrop-blur-xl border-b border-white/10 z-50 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+                TOPPER OS
+            </h1>
+            <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Class 10 Edition</p>
+        </div>
         
-        <!-- App Header -->
-        <div class="px-6 pt-12 pb-4 flex justify-between items-center bg-slate-900/90 backdrop-blur-md z-20 sticky top-0">
-            <div>
-                <p class="text-xs text-indigo-400 font-bold tracking-wider uppercase">Mission Rank #1</p>
-                <h1 class="text-2xl font-extrabold text-white">Hello, Topper! 👋</h1>
-            </div>
-            <!-- Custom Install Button -->
-            <button id="installAppBtn" class="hidden install-pulse bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg flex items-center gap-2 active:scale-95 transition-transform">
-                <i data-lucide="download" class="w-4 h-4"></i> Install
-            </button>
-        </div>
+        <!-- THE MAGIC INSTALL BUTTON -->
+        <button id="install-btn" class="hidden install-anim bg-white text-black px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 active:scale-95 transition-transform">
+            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+            INSTALL APP
+        </button>
+    </header>
 
-        <!-- Main Content Area (Pages will be injected here) -->
-        <div id="content-area" class="px-5">
-            <!-- Dynamic Content -->
-        </div>
+    <!-- SCROLLABLE CONTENT AREA -->
+    <main id="app-content" class="flex-1 overflow-y-auto no-scrollbar relative">
+        <!-- Content Injected via JS -->
+    </main>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="absolute bottom-0 w-full bg-slate-900/95 border-t border-slate-800 backdrop-blur-lg flex justify-around items-center py-4 pb-6 z-30">
-            <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center gap-1 text-indigo-400 w-1/3">
-                <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
-                <span class="text-[10px] font-medium">Home</span>
-            </button>
-            <button onclick="switchTab('roadmap')" class="nav-btn flex flex-col items-center gap-1 text-slate-500 w-1/3">
-                <i data-lucide="map" class="w-6 h-6"></i>
-                <span class="text-[10px] font-medium">Roadmap</span>
-            </button>
-            <button onclick="switchTab('power')" class="nav-btn flex flex-col items-center gap-1 text-slate-500 w-1/3">
-                <i data-lucide="zap" class="w-6 h-6"></i>
-                <span class="text-[10px] font-medium">Power Boost</span>
-            </button>
-        </div>
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="flex-none h-20 bg-black/90 backdrop-blur-lg border-t border-white/10 flex justify-around items-center px-2 pb-2 z-50">
+        <button onclick="router('home')" class="nav-item active flex flex-col items-center justify-center w-16 h-16 relative text-gray-500 transition-colors">
+            <i data-lucide="home" class="w-6 h-6 mb-1"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </button>
+        <button onclick="router('syllabus')" class="nav-item flex flex-col items-center justify-center w-16 h-16 relative text-gray-500 transition-colors">
+            <i data-lucide="list-todo" class="w-6 h-6 mb-1"></i>
+            <span class="text-[10px] font-medium">Plan</span>
+        </button>
+        <button onclick="router('boost')" class="nav-item flex flex-col items-center justify-center w-16 h-16 relative text-gray-500 transition-colors">
+            <i data-lucide="zap" class="w-6 h-6 mb-1"></i>
+            <span class="text-[10px] font-medium">Boost</span>
+        </button>
+    </nav>
 
-    </div>
-
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- SYLLABUS DATA (18 Jan to 18 Feb) ---
-        const syllabus = [
-            // PHASE 1: THE GRIND (18 Jan - 10 Feb)
-            { date: "18 Jan", type: "grind", title: "Prose: A Letter to God", sub: "Learn Long Ans + Tenses (Present)", id: "d1" },
-            { date: "19 Jan", type: "grind", title: "Poetry: Dust of Snow + Fire & Ice", sub: "Central Idea + Tenses (Past)", id: "d2" },
-            { date: "20 Jan", type: "grind", title: "Prose: Nelson Mandela", sub: "Short Q/A + Tenses (Future)", id: "d3" },
-            { date: "21 Jan", type: "grind", title: "Supp: Triumph of Surgery", sub: "Character Sketch: Tricki + Reordering", id: "d4" },
-            { date: "22 Jan", type: "grind", title: "Prose: Two Stories about Flying", sub: "Active-Passive Voice Rules", id: "d5" },
-            { date: "23 Jan", type: "grind", title: "Writing: Letter (Editor)", sub: "Practice Format + Passive Voice", id: "d6" },
-            { date: "24 Jan", type: "grind", title: "Poetry: A Tiger in the Zoo", sub: "Stanza MCQs + Direct-Indirect", id: "d7" },
-            { date: "25 Jan", type: "grind", title: "Supp: The Thief's Story", sub: "Hari Singh Sketch + Narrations", id: "d8" },
-            { date: "26 Jan", type: "grind", title: "Prose: Anne Frank", sub: "Diary Entry Format + Punctuation", id: "d9" },
-            { date: "27 Jan", type: "grind", title: "Poetry: Wild Animals + Ball Poem", sub: "Poetic Devices + Prepositions", id: "d10" },
-            { date: "28 Jan", type: "grind", title: "Supp: Midnight Visitor", sub: "Ausable's Brain + Prepositions", id: "d11" },
-            { date: "29 Jan", type: "grind", title: "Prose: Glimpses of India", sub: "All 3 Parts + Articles (A, An, The)", id: "d12" },
-            { date: "30 Jan", type: "grind", title: "Writing: Article Writing", sub: "Topics: Pollution, Games + Translation", id: "d13" },
-            { date: "31 Jan", type: "grind", title: "Supp: Question of Trust", sub: "Horace Danby + Spellings", id: "d14" },
-            { date: "01 Feb", type: "grind", title: "Review Day: Grammar", sub: "Solve 50 MCQs Mixed", id: "d15" },
-            { date: "02 Feb", type: "grind", title: "Prose: Mijbil the Otter", sub: "Travel Route + Translation 5 lines", id: "d16" },
-            { date: "03 Feb", type: "grind", title: "Poetry: Amanda", sub: "Amanda's desire + Unseen Passage", id: "d17" },
-            { date: "04 Feb", type: "grind", title: "Supp: Footprints without Feet", sub: "Griffin's Character + Letter (Complaint)", id: "d18" },
-            { date: "05 Feb", type: "grind", title: "Prose: Madam Rides the Bus", sub: "Valli's Character + Application", id: "d19" },
-            { date: "06 Feb", type: "grind", title: "Poetry: The Trees + Fog", sub: "Central Ideas + Article (Science)", id: "d20" },
-            { date: "07 Feb", type: "grind", title: "Supp: Making of a Scientist", sub: "Richard Ebright + Report Writing", id: "d21" },
-            { date: "08 Feb", type: "grind", title: "Prose: Sermon at Benares", sub: "Buddha's Teaching + Translation", id: "d22" },
-            { date: "09 Feb", type: "grind", title: "Supp: Necklace + Hack Driver", sub: "Matilda & Lawyer + Full Grammar", id: "d23" },
-            { date: "10 Feb", type: "grind", title: "Supp: Bholi + Book Saved Earth", sub: "Bholi's Teacher + OMR Sheet Practice", id: "d24" },
-            
-            // PHASE 2: POWER BOOST (11 Feb - 17 Feb)
-            { date: "11 Feb", type: "power", title: "🔥 POWER MOCK 1", sub: "Solve 2024 Paper (Set A) - 3 Hours", id: "d25" },
-            { date: "12 Feb", type: "power", title: "🔥 POWER MOCK 2", sub: "Solve 2024 Paper (Set B) - 3 Hours", id: "d26" },
-            { date: "13 Feb", type: "power", title: "⚡ Rapid Fire Grammar", sub: "Revise 100 Rules in 2 Hours", id: "d27" },
-            { date: "14 Feb", type: "power", title: "📝 Writing Masterclass", sub: "Memorize 5 Articles & 3 Letters", id: "d28" },
-            { date: "15 Feb", type: "power", title: "🔥 POWER MOCK 3", sub: "Sample Paper 2025 (Self Test)", id: "d29" },
-            { date: "16 Feb", type: "power", title: "🧘‍♂️ Weakness Fixer", sub: "Only revise what you forget", id: "d30" },
-            { date: "17 Feb", type: "power", title: "🚀 FINAL LAUNCH", sub: "Author Names, Formats, Sleep Early", id: "d31" },
-            { date: "18 Feb", type: "exam", title: "⚔️ EXAM DAY", sub: "Go & Win! Best of Luck!", id: "d32" }
+        // --- DATA ENGINE ---
+        const syllabusData = [
+            // PHASE 1: SYLLABUS COMPLETION (18 Jan - 10 Feb)
+            { id: 1, date: "18 Jan", cat: "Prose", title: "A Letter to God", task: "Learn Long Answers + Translation" },
+            { id: 2, date: "19 Jan", cat: "Poetry", title: "Dust of Snow + Fire/Ice", task: "Central Idea + MCQs" },
+            { id: 3, date: "20 Jan", cat: "Prose", title: "Nelson Mandela", task: "Oral Comprehension Qs" },
+            { id: 4, date: "21 Jan", cat: "Supp", title: "Triumph of Surgery", task: "Character Sketch: Tricki" },
+            { id: 5, date: "22 Jan", cat: "Grammar", title: "Tenses Revision", task: "Solve 20 Exercises" },
+            { id: 6, date: "23 Jan", cat: "Prose", title: "Two Stories Flying", task: "Seagull & Black Aeroplane" },
+            { id: 7, date: "24 Jan", cat: "Writing", title: "Letter to Editor", task: "Memorize Format + 1 Example" },
+            { id: 8, date: "25 Jan", cat: "Supp", title: "The Thief's Story", task: "Hari Singh Sketch + Values" },
+            { id: 9, date: "26 Jan", cat: "Prose", title: "Anne Frank", task: "Diary Entry Format check" },
+            { id: 10, date: "27 Jan", cat: "Poetry", title: "Tiger in Zoo + Wild Animals", task: "Poetic Devices (Metaphor etc)" },
+            { id: 11, date: "28 Jan", cat: "Grammar", title: "Active/Passive Voice", task: "Change the voice rules" },
+            { id: 12, date: "29 Jan", cat: "Supp", title: "Midnight Visitor", task: "Ausable's Intelligence Qs" },
+            { id: 13, date: "30 Jan", cat: "Prose", title: "Glimpses of India", task: "Goa, Coorg, Assam (Short Ans)" },
+            { id: 14, date: "31 Jan", cat: "Writing", title: "Article Writing", task: "Topic: Pollution / Mobile Phones" },
+            { id: 15, date: "01 Feb", cat: "Supp", title: "Question of Trust", task: "Horace Danby Character" },
+            { id: 16, date: "02 Feb", cat: "Grammar", title: "Narration (Direct/Indirect)", task: "Convert Dialogues" },
+            { id: 17, date: "03 Feb", cat: "Prose", title: "Mijbil the Otter", task: "Summary reading" },
+            { id: 18, date: "04 Feb", cat: "Poetry", title: "The Ball Poem + Amanda", task: "Theme of loss & freedom" },
+            { id: 19, date: "05 Feb", cat: "Supp", title: "Footprints w/o Feet", task: "Griffin's Lawlessness Qs" },
+            { id: 20, date: "06 Feb", cat: "Prose", title: "Madam Rides the Bus", task: "Valli's Character Sketch" },
+            { id: 21, date: "07 Feb", cat: "Grammar", title: "Prepositions & Spelling", task: "Fill in the blanks" },
+            { id: 22, date: "08 Feb", cat: "Supp", title: "Making of a Scientist", task: "Ebright's curiosity" },
+            { id: 23, date: "09 Feb", cat: "Lit", title: "Sermon at Benares", task: "Life & Death Philosophy" },
+            { id: 24, date: "10 Feb", cat: "Supp", title: "Bholi + Book Saved Earth", task: "Bholi's Teacher Role" },
         ];
 
-        // --- STATE MANAGEMENT ---
-        const APP_ID = 'topper_app_v2';
-        let progress = JSON.parse(localStorage.getItem(APP_ID)) || {};
-        let currentTab = 'dashboard';
+        const powerBoostData = [
+            // PHASE 2: POWER BOOST (11 Feb - 18 Feb)
+            { id: 25, date: "11 Feb", type: "mock", title: "🔴 MOCK TEST 1", task: "2024 Paper - 3 Hours Strict" },
+            { id: 26, date: "12 Feb", type: "rev", title: "Writing Masterclass", task: "Revise all 5 formats again" },
+            { id: 27, date: "13 Feb", type: "mock", title: "🔴 MOCK TEST 2", task: "Sample Paper 2025" },
+            { id: 28, date: "14 Feb", type: "rev", title: "Grammar Rules 101", task: "All Rules One Shot" },
+            { id: 29, date: "15 Feb", type: "rev", title: "Literature Gaps", task: "Read only forgotten chapters" },
+            { id: 30, date: "16 Feb", type: "mock", title: "🔴 MOCK TEST 3", task: "Self Assessment" },
+            { id: 31, date: "17 Feb", type: "chill", title: "Final Polish", task: "Author Names + Relax" },
+            { id: 32, date: "18 Feb", type: "win", title: "🔥 EXAM DAY", task: "Go and Conquer!" },
+        ];
 
-        // --- INIT ---
+        // --- APP STATE ---
+        const APP_KEY = 'topper_os_data';
+        let progress = JSON.parse(localStorage.getItem(APP_KEY)) || {};
+        let currentRoute = 'home';
+
+        // --- INITIALIZATION ---
         window.onload = () => {
             lucide.createIcons();
-            initInstall();
-            switchTab('dashboard'); // Default tab
+            initInstallLogic();
+            router('home');
         };
 
-        // --- NAVIGATION ---
-        function switchTab(tab) {
-            currentTab = tab;
-            const content = document.getElementById('content-area');
-            const btns = document.querySelectorAll('.nav-btn');
+        // --- ROUTING SYSTEM ---
+        function router(route) {
+            currentRoute = route;
+            const content = document.getElementById('app-content');
             
-            // Update Active State
-            btns.forEach(btn => {
-                btn.classList.remove('text-indigo-400');
-                btn.classList.add('text-slate-500');
-            });
-            
-            // Highlight active button
-            if(tab === 'dashboard') btns[0].classList.add('text-indigo-400', 'text-slate-500');
-            if(tab === 'dashboard') btns[0].classList.remove('text-slate-500');
-            
-            if(tab === 'roadmap') btns[1].classList.add('text-indigo-400');
-            if(tab === 'roadmap') btns[1].classList.remove('text-slate-500');
+            // Update Tab Icons
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(route === 'home') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(route === 'syllabus') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            if(route === 'boost') document.querySelectorAll('.nav-item')[2].classList.add('active');
 
-            if(tab === 'power') btns[2].classList.add('text-pink-500'); // Special color for power
-            if(tab === 'power') btns[2].classList.remove('text-slate-500');
-
-            // Render Content
-            if (tab === 'dashboard') renderDashboard();
-            if (tab === 'roadmap') renderRoadmap();
-            if (tab === 'power') renderPowerMode();
+            // Render Views
+            if(route === 'home') content.innerHTML = renderHome();
+            if(route === 'syllabus') content.innerHTML = renderList(syllabusData, "Syllabus Tracker", "18 Jan - 10 Feb");
+            if(route === 'boost') content.innerHTML = renderList(powerBoostData, "Power Boost ⚡", "11 Feb - 18 Feb", true);
+            
+            lucide.createIcons();
         }
 
-        // --- RENDERERS ---
+        // --- VIEWS ---
+        function renderHome() {
+            const total = syllabusData.length + powerBoostData.length;
+            const done = Object.keys(progress).length;
+            const pct = Math.round((done / total) * 100);
 
-        function renderDashboard() {
-            const today = new Date();
-            // Simulating today as a date within our range for demo if outside range
-            // let dateStr = `${today.getDate()} ${today.toLocaleString('default', { month: 'short' })}`;
-            // NOTE: For User Demo, let's calculate the "Current Day" logic.
-            // If today is NOT in range, we show Day 1.
-            
-            const totalTasks = syllabus.length;
-            const doneTasks = Object.keys(progress).length;
-            const percent = Math.round((doneTasks / totalTasks) * 100);
+            // Find Today's Task (Logic adapted for demo)
+            // In real usage, compare dates. For now, showing next pending.
+            const nextTask = [...syllabusData, ...powerBoostData].find(t => !progress[t.id]) || {title: "All Done!", task: "You are ready!"};
 
-            // Find "Today's" task or next pending task
-            let activeTask = syllabus.find(t => !progress[t.id]) || syllabus[syllabus.length - 1];
-
-            document.getElementById('content-area').innerHTML = `
-                <div class="page-enter">
-                    <!-- Progress Card -->
-                    <div class="glass rounded-3xl p-6 mb-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500 rounded-full filter blur-3xl opacity-20 -mr-10 -mt-10"></div>
-                        <h2 class="text-slate-400 text-sm font-medium mb-1">Total Progress</h2>
-                        <div class="flex items-end gap-2 mb-2">
-                            <span class="text-4xl font-bold text-white">${percent}%</span>
-                            <span class="text-indigo-400 text-sm font-bold mb-1">Topper Loading...</span>
-                        </div>
-                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-indigo-500 h-full transition-all duration-1000" style="width: ${percent}%"></div>
+            return `
+                <div class="p-6 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+                    
+                    <!-- Progress Circle -->
+                    <div class="flex justify-center py-4">
+                        <div class="relative w-48 h-48 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="96" cy="96" r="88" stroke="#1f2937" stroke-width="12" fill="none"></circle>
+                                <circle cx="96" cy="96" r="88" stroke="#3b82f6" stroke-width="12" fill="none" stroke-dasharray="552" stroke-dashoffset="${552 - (552 * pct) / 100}" class="transition-all duration-1000"></circle>
+                            </svg>
+                            <div class="absolute text-center">
+                                <div class="text-5xl font-black text-white">${pct}%</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest mt-1">Ready</div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Today's Focus -->
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <i data-lucide="target" class="w-5 h-5 text-red-400"></i> Next Target
-                    </h3>
-
-                    <div class="glass rounded-2xl p-5 border-l-4 border-l-indigo-500 relative">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">${activeTask.date}</span>
-                                <h2 class="text-xl font-bold text-white leading-tight">${activeTask.title}</h2>
-                                <p class="text-slate-400 text-sm mt-2">${activeTask.sub}</p>
+                    <!-- Today's Card -->
+                    <div>
+                        <h2 class="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">Up Next</h2>
+                        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 relative overflow-hidden neon-border">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <i data-lucide="target" class="w-24 h-24 text-blue-500"></i>
                             </div>
-                            <div onclick="toggleTask('${activeTask.id}')" class="check-circle cursor-pointer ${progress[activeTask.id] ? 'bg-indigo-500' : ''}">
-                                ${progress[activeTask.id] ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
+                            <div class="relative z-10">
+                                <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">${nextTask.date || 'Now'}</span>
+                                <h3 class="text-2xl font-bold text-white mb-1">${nextTask.title}</h3>
+                                <p class="text-gray-400 text-sm leading-relaxed">${nextTask.task}</p>
+                                <button onclick="router('${nextTask.id > 24 ? 'boost' : 'syllabus'}')" class="mt-4 bg-white text-black px-6 py-2 rounded-full text-xs font-bold hover:bg-gray-200 transition">GO TO TASK</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Quick Stats -->
-                    <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="bg-slate-800/50 p-4 rounded-2xl text-center">
-                            <i data-lucide="book" class="w-6 h-6 text-blue-400 mx-auto mb-2"></i>
-                            <div class="text-xs text-slate-400">Chapters Left</div>
-                            <div class="text-xl font-bold">${syllabus.filter(t => t.type==='grind').length - Object.keys(progress).filter(k => parseInt(k.replace('d','')) <= 24).length}</div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-900/50 rounded-2xl p-4 text-center border border-gray-800">
+                            <div class="text-3xl font-bold text-emerald-400">${done}</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Tasks Done</div>
                         </div>
-                        <div class="bg-slate-800/50 p-4 rounded-2xl text-center">
-                            <i data-lucide="trophy" class="w-6 h-6 text-yellow-400 mx-auto mb-2"></i>
-                            <div class="text-xs text-slate-400">Mock Tests</div>
-                            <div class="text-xl font-bold">3 Pending</div>
+                        <div class="bg-gray-900/50 rounded-2xl p-4 text-center border border-gray-800">
+                            <div class="text-3xl font-bold text-purple-400">${total - done}</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Remaining</div>
                         </div>
                     </div>
                 </div>
             `;
-            lucide.createIcons();
         }
 
-        function renderRoadmap() {
+        function renderList(data, title, subtitle, isBoost = false) {
             let html = `
-                <div class="page-enter">
-                    <h2 class="text-xl font-bold mb-4 sticky top-0 bg-[#0f172a] py-2 z-10">📅 Full Plan (18 Jan - 10 Feb)</h2>
+                <div class="p-6 pb-24 animate-[fadeIn_0.3s_ease-out]">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-white">${title}</h2>
+                        <p class="text-xs text-gray-400 font-mono">${subtitle}</p>
+                    </div>
                     <div class="space-y-3">
             `;
 
-            syllabus.filter(t => t.type === 'grind').forEach(item => {
+            data.forEach((item, index) => {
                 const isDone = progress[item.id];
+                const cardColor = isBoost ? 'bg-gray-900/80 border-purple-900/30' : 'bg-gray-900/60 border-gray-800';
+                
                 html += `
-                    <div onclick="toggleTask('${item.id}')" class="task-row ${isDone ? 'completed' : ''} glass p-4 rounded-xl flex items-center justify-between cursor-pointer active:scale-95 transition-transform">
-                        <div class="flex-1">
-                            <div class="text-xs text-slate-500 font-mono mb-1">${item.date}</div>
-                            <h3 class="text-sm font-semibold text-white transition-colors">${item.title}</h3>
-                            <p class="text-xs text-slate-400 mt-1 truncate">${item.sub}</p>
+                    <div onclick="toggle(${item.id})" class="group relative ${cardColor} border rounded-2xl p-4 flex items-center gap-4 transition-all active:scale-[0.98] ${isDone ? 'checked-task opacity-60' : ''}">
+                        
+                        <!-- Checkbox -->
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-600 flex items-center justify-center check-box flex-shrink-0 ${isDone ? 'checked' : ''}">
+                            ${isDone ? '<i data-lucide="check" class="w-3 h-3 text-black"></i>' : ''}
                         </div>
-                        <div class="check-circle ml-3 flex-shrink-0">
-                            ${isDone ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
+
+                        <!-- Text -->
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] font-bold ${isBoost ? 'text-purple-400' : 'text-blue-400'} bg-white/5 px-2 py-0.5 rounded">${item.date}</span>
+                                <span class="text-[10px] text-gray-600 font-medium">${item.cat || item.type}</span>
+                            </div>
+                            <h3 class="text-base font-bold text-white task-title leading-tight">${item.title}</h3>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">${item.task}</p>
                         </div>
                     </div>
                 `;
             });
-
             html += `</div></div>`;
-            document.getElementById('content-area').innerHTML = html;
-            lucide.createIcons();
+            return html;
         }
 
-        function renderPowerMode() {
-            let html = `
-                <div class="page-enter">
-                    <div class="bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl p-6 mb-6 text-center shadow-lg shadow-pink-500/20">
-                        <h2 class="text-2xl font-black italic tracking-tighter">POWER BOOST ⚡</h2>
-                        <p class="text-xs text-pink-100 mt-1 opacity-90">Only for those who want Rank #1</p>
-                    </div>
-
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Final Battle (11 Feb - 18 Feb)</h3>
-                    <div class="space-y-3">
-            `;
-
-            syllabus.filter(t => t.type === 'power' || t.type === 'exam').forEach(item => {
-                const isDone = progress[item.id];
-                const isExam = item.type === 'exam';
-                html += `
-                    <div onclick="toggleTask('${item.id}')" class="task-row ${isDone ? 'completed' : ''} bg-slate-800/60 border border-slate-700 p-4 rounded-xl flex items-center justify-between cursor-pointer active:scale-95 transition-transform ${isExam ? 'border-yellow-500/50 bg-yellow-900/10' : ''}">
-                        <div class="flex-1">
-                            <div class="text-xs text-pink-400 font-bold mb-1">${item.date}</div>
-                            <h3 class="text-base font-bold text-white transition-colors ${isExam ? 'text-yellow-400' : ''}">${item.title}</h3>
-                            <p class="text-xs text-slate-400 mt-1">${item.sub}</p>
-                        </div>
-                        <div class="check-circle ml-3 flex-shrink-0 ${isExam ? 'border-yellow-400' : 'border-pink-500'}">
-                            ${isDone ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            html += `</div></div>`;
-            document.getElementById('content-area').innerHTML = html;
-            lucide.createIcons();
-        }
-
-        // --- ACTIONS ---
-        function toggleTask(id) {
-            if (progress[id]) {
-                delete progress[id];
-            } else {
+        // --- LOGIC CORE ---
+        function toggle(id) {
+            if(progress[id]) delete progress[id];
+            else {
                 progress[id] = true;
-                // Vibrate for feedback
-                if (navigator.vibrate) navigator.vibrate(30);
+                if(navigator.vibrate) navigator.vibrate(50);
             }
-            localStorage.setItem(APP_ID, JSON.stringify(progress));
+            localStorage.setItem(APP_KEY, JSON.stringify(progress));
             
-            // Re-render current tab
-            if (currentTab === 'dashboard') renderDashboard();
-            else if (currentTab === 'roadmap') renderRoadmap();
-            else renderPowerMode();
+            // Re-render current view only
+            if(currentRoute === 'syllabus') document.getElementById('app-content').innerHTML = renderList(syllabusData, "Syllabus Tracker", "18 Jan - 10 Feb");
+            else if(currentRoute === 'boost') document.getElementById('app-content').innerHTML = renderList(powerBoostData, "Power Boost ⚡", "11 Feb - 18 Feb", true);
+            
+            lucide.createIcons();
         }
 
-        // --- PWA INSTALL LOGIC ---
+        // --- INSTALLATION MAGIC (PWA) ---
         let deferredPrompt;
-        function initInstall() {
-            const btn = document.getElementById('installAppBtn');
-            
+
+        function initInstallLogic() {
+            const installBtn = document.getElementById('install-btn');
+
+            // 1. Listen for the browser's event
             window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent the mini-infobar from appearing on mobile
                 e.preventDefault();
+                // Stash the event so it can be triggered later.
                 deferredPrompt = e;
-                btn.classList.remove('hidden');
+                // Update UI notify the user they can install the PWA
+                installBtn.classList.remove('hidden');
+                console.log("Install prompt captured!");
             });
 
-            btn.addEventListener('click', async () => {
+            // 2. Handle Button Click
+            installBtn.addEventListener('click', async () => {
                 if (deferredPrompt) {
+                    // Show the native install prompt
                     deferredPrompt.prompt();
+                    // Wait for the user to respond to the prompt
                     const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    // We've used the prompt, and can't use it again, throw it away
                     deferredPrompt = null;
-                    if(outcome === 'accepted') btn.classList.add('hidden');
+                    if(outcome === 'accepted') {
+                        installBtn.classList.add('hidden');
+                    }
                 } else {
-                    // Fallback for when browser blocks automatic prompt or in iframe
-                    alert("App Install Kaise Karein:\n\n1. Browser ke menu (⋮) par click karein.\n2. 'Install App' ya 'Add to Home Screen' select karein.\n3. Bas ho gaya! 🚀");
+                    // Fallback for devices where prompt is not available (like iOS or already installed)
+                    alert("⚠️ INSTALL GUIDE:\n\n1. Tap the Share/Menu button in your browser.\n2. Select 'Add to Home Screen'.\n3. Enjoy your Topper App!");
                 }
             });
 
+            // 3. Check if already installed
             if (window.matchMedia('(display-mode: standalone)').matches) {
-                btn.classList.add('hidden');
+                installBtn.classList.add('hidden');
             }
         }
+
     </script>
 </body>
 </html>
