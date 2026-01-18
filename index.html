@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>English Topper 2026 🚀</title>
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="UP Board Class 10 English Revision Tracker">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1; 
+            border-radius: 10px;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .task-checkbox:checked + div {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .task-checkbox {
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid #6366f1;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-checkbox::before {
+            content: "";
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 0.2s transform ease-in-out;
+            background-color: #6366f1;
+        }
+
+        .task-checkbox:checked::before {
+            transform: scale(1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Mobile specific fixes */
+        .pwa-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen pb-20">
+
+    <!-- Header Section -->
+    <header class="fixed top-0 w-full z-50 glass-card border-b border-slate-700">
+        <div class="max-w-3xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center mb-2">
+                <div>
+                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+                        Mission Topper 2026 🎯
+                    </h1>
+                    <p class="text-xs text-slate-400">Class 10 UP Board | English</p>
+                </div>
+                <button id="installBtn" class="hidden pwa-btn px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-lg shadow-indigo-500/30 active:scale-95 transition-transform flex items-center gap-1">
+                    <i data-lucide="download" class="w-3 h-3"></i> Install App
+                </button>
+            </div>
+            
+            <!-- Overall Progress -->
+            <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden mt-1 relative">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 transition-all duration-500 ease-out w-0 relative">
+                    <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+            </div>
+            <div class="flex justify-between mt-1 text-xs text-slate-300 font-medium">
+                <span id="progressText">0% Complete</span>
+                <span>Target: 95%+ 🔥</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="appContainer" class="max-w-3xl mx-auto px-4 pt-28 space-y-4">
+        <!-- Content injected by JS -->
+    </main>
+
+    <!-- Floating Action Button for Today -->
+    <button onclick="scrollToToday()" class="fixed bottom-6 right-6 pwa-btn p-4 rounded-full shadow-2xl shadow-purple-500/40 z-40 active:scale-90 transition-transform">
+        <i data-lucide="calendar" class="w-6 h-6 text-white"></i>
+    </button>
+
+    <script>
+        // --- DATA: The 30 Day Plan ---
+        const syllabus = [
+            { day: 1, date: "18 Jan", topic: "Prose: A Letter to God", grammar: "Tenses (Present)", writing: "Translation (Hi-En) 4 lines", extra: "Learn 2 Short Ans + 1 Long Ans" },
+            { day: 2, date: "19 Jan", topic: "Poetry: Dust of Snow + Fire and Ice", grammar: "Tenses (Past)", writing: "Letter to Editor (Format)", extra: "Central Idea of both poems" },
+            { day: 3, date: "20 Jan", topic: "Prose: Nelson Mandela", grammar: "Tenses (Future)", writing: "Article: Pollution", extra: "Learn meanings of tough words" },
+            { day: 4, date: "21 Jan", topic: "Supp: A Triumph of Surgery", grammar: "Sentences Reordering", writing: "Translation Practice", extra: "Character Sketch: Tricki/Mrs. Pumphrey" },
+            { day: 5, date: "22 Jan", topic: "Prose: Two Stories about Flying", grammar: "Active-Passive Voice (Basic)", writing: "Report Writing: Science Exhibition", extra: "Short Q/A Practice" },
+            { day: 6, date: "23 Jan", topic: "Poetry: A Tiger in the Zoo", grammar: "Active-Passive (Advanced)", writing: "Application to Principal (Leave)", extra: "Stanza based MCQs" },
+            { day: 7, date: "24 Jan", topic: "Supp: The Thief's Story", grammar: "Direct-Indirect (Assertive)", writing: "Translation (Story based)", extra: "Character Sketch: Hari Singh" },
+            { day: 8, date: "25 Jan", topic: "Weekly Revision (Test Yourself)", grammar: "Mixed Grammar Exercises", writing: "Write 1 Article without seeing", extra: "Solve 1 Previous Year Paper Section A" },
+            { day: 9, date: "26 Jan", topic: "Prose: From the Diary of Anne Frank", grammar: "Direct-Indirect (Interrogative)", writing: "Descriptive Paragraph: My Best Friend", extra: "Long Answer on Anne's Life" },
+            { day: 10, date: "27 Jan", topic: "Poetry: How to Tell Wild Animals", grammar: "Direct-Indirect (Imperative)", writing: "Translation Practice", extra: "Poetic Devices check" },
+            { day: 11, date: "28 Jan", topic: "Supp: The Midnight Visitor", grammar: "Prepositions (in, on, at, into)", writing: "Letter: Complaint (Electricity/Water)", extra: "Role of Ausable (Long Ans)" },
+            { day: 12, date: "29 Jan", topic: "Prose: Glimpses of India (All 3 parts)", grammar: "Prepositions (Complex)", writing: "Article: Importance of Games", extra: "Short Ans from each part" },
+            { day: 13, date: "30 Jan", topic: "Poetry: The Ball Poem", grammar: "Conjunctions", writing: "Translation (Current Topic)", extra: "Central Idea memorization" },
+            { day: 14, date: "31 Jan", topic: "Supp: A Question of Trust", grammar: "Completing Spellings", writing: "Report: Road Accident/Event", extra: "Horace Danby Character" },
+            { day: 15, date: "01 Feb", topic: "Review: Grammar Mega Test", grammar: "Solve 20 MCQs", writing: "Write 1 Formal Letter", extra: "Revise all Poet Names" },
+            { day: 16, date: "02 Feb", topic: "Prose: Mijbil the Otter", grammar: "Punctuation Practice", writing: "Translation", extra: "Map work/Travel route of Mijbil" },
+            { day: 17, date: "03 Feb", topic: "Poetry: Amanda", grammar: "Transformation of Sentences", writing: "Article: Save Water", extra: "Value points of Amanda" },
+            { day: 18, date: "04 Feb", topic: "Supp: Footprints without Feet", grammar: "Idioms & Phrases", writing: "Application: Subject Change/Fees", extra: "Griffin's Character Sketch" },
+            { day: 19, date: "05 Feb", topic: "Prose: Madam Rides the Bus", grammar: "Synonyms & Antonyms", writing: "Translation (Hard Level)", extra: "Valli's Character Sketch" },
+            { day: 20, date: "06 Feb", topic: "Poetry: The Trees", grammar: "One Word Substitution", writing: "Report: Independence Day/Republic Day", extra: "Central Idea" },
+            { day: 21, date: "07 Feb", topic: "Supp: The Making of a Scientist", grammar: "Homophones", writing: "Descriptive Para: Indian Farmer", extra: "Richard Ebright's qualities" },
+            { day: 22, date: "08 Feb", topic: "Prose: The Sermon at Benares", grammar: "Gap Filling Exercises", writing: "Translation", extra: "Teachings of Buddha (Long Ans)" },
+            { day: 23, date: "09 Feb", topic: "Poetry: Fog + The Tale of Custard", grammar: "Editing/Omission", writing: "Letter to Father (Request Money)", extra: "Humor in Custard poem" },
+            { day: 24, date: "10 Feb", topic: "Supp: The Necklace", grammar: "Use of Verb Forms", writing: "Article: My Town/City", extra: "Matilda's tragedy (Long Ans)" },
+            { day: 25, date: "11 Feb", topic: "Prose: The Proposal", grammar: "Revisiting Tenses/Voice", writing: "Translation", extra: "Humor & Irony in chapter" },
+            { day: 26, date: "12 Feb", topic: "Poetry: For Anne Gregory", grammar: "Revisiting Narration", writing: "Report Writing Revision", extra: "Central Idea" },
+            { day: 27, date: "13 Feb", topic: "Supp: The Hack Driver", grammar: "Unseen Passage Practice", writing: "Letter Writing Revision", extra: "The Lawyer's experience" },
+            { day: 28, date: "14 Feb", topic: "Supp: Bholi + Book that Saved Earth", grammar: "Unseen Passage Practice", writing: "Article Writing Revision", extra: "Bholi's transformation" },
+            { day: 29, date: "15 Feb", topic: "FULL SYLLABUS MOCK TEST 1", grammar: "Solve Full Grammar Section", writing: "Solve Full Writing Section", extra: "Time Management Check" },
+            { day: 30, date: "16 Feb", topic: "FULL SYLLABUS MOCK TEST 2", grammar: "Previous Year Paper 2024", writing: "Focus on Handwriting", extra: "Self Analysis of errors" },
+            { day: 31, date: "17 Feb", topic: "Final Revision: Formats & Authors", grammar: "Quick Glance at Rules", writing: "Read best Samples", extra: "Relax & Sleep Well" },
+            { day: 32, date: "18 Feb", topic: "EXAM DAY / READY FOR BATTLE", grammar: "Be Confident", writing: "You are the Best!", extra: "BEST OF LUCK 👍" },
+        ];
+
+        // --- STATE MANAGEMENT ---
+        const APP_ID = 'english_topper_v1';
+        let progressData = JSON.parse(localStorage.getItem(APP_ID)) || {};
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+            lucide.createIcons();
+            initPWA();
+            
+            // Check current date and scroll
+            setTimeout(scrollToToday, 500);
+        });
+
+        // --- RENDER LOGIC ---
+        function renderApp() {
+            const container = document.getElementById('appContainer');
+            const today = new Date();
+            const todayStr = `${today.getDate()} ${today.toLocaleString('default', { month: 'short' })}`;
+
+            let html = '';
+
+            syllabus.forEach((item, index) => {
+                const isCompleted = progressData[item.day] || false;
+                
+                // Highlight logic
+                let cardClass = "glass-card rounded-2xl p-5 mb-4 border-l-4 border-l-transparent transition-all";
+                let statusBadge = '';
+                let isToday = false;
+
+                // Simple date matching (Note: Real apps use fuller date objects, simplified for this specific range)
+                // Assuming year 2026.
+                if (item.date === todayStr && today.getFullYear() === 2026) {
+                    cardClass = "glass-card rounded-2xl p-5 mb-4 border-l-4 border-l-yellow-400 bg-slate-800/80 ring-2 ring-yellow-500/30 transform scale-[1.02]";
+                    statusBadge = `<span class="bg-yellow-500/20 text-yellow-300 text-[10px] font-bold px-2 py-0.5 rounded ml-2 animate-pulse">TODAY</span>`;
+                    isToday = true;
+                } else if (isCompleted) {
+                    cardClass = "glass-card rounded-2xl p-5 mb-4 border-l-4 border-l-green-500 opacity-70";
+                    statusBadge = `<span class="bg-green-500/20 text-green-300 text-[10px] font-bold px-2 py-0.5 rounded ml-2">DONE</span>`;
+                }
+
+                html += `
+                <div id="day-${item.day}" class="${cardClass} animate-fade-in" style="animation-delay: ${index * 0.05}s">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="flex items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Day ${item.day} • ${item.date}</span>
+                                ${statusBadge}
+                            </div>
+                            <h2 class="text-lg font-bold text-white mt-1 leading-tight">${item.topic}</h2>
+                        </div>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" class="task-checkbox" 
+                                onchange="toggleTask(${item.day})" 
+                                ${isCompleted ? 'checked' : ''}>
+                        </label>
+                    </div>
+
+                    <div class="space-y-2 mt-3">
+                        <div class="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 p-2 rounded-lg">
+                            <i data-lucide="book-open" class="w-4 h-4 text-pink-400 flex-shrink-0"></i>
+                            <span>${item.grammar}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 p-2 rounded-lg">
+                            <i data-lucide="pen-tool" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
+                            <span>${item.writing}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 p-2 rounded-lg">
+                            <i data-lucide="brain" class="w-4 h-4 text-yellow-400 flex-shrink-0"></i>
+                            <span class="text-xs font-mono text-yellow-100">${item.extra}</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateProgressBar();
+        }
+
+        // --- ACTIONS ---
+        function toggleTask(day) {
+            if (progressData[day]) {
+                delete progressData[day];
+            } else {
+                progressData[day] = true;
+                // Celebration vibe
+                if (navigator.vibrate) navigator.vibrate(50);
+            }
+            localStorage.setItem(APP_ID, JSON.stringify(progressData));
+            
+            // Re-render specific card styling (simplified: re-render all to keep state clean)
+            renderApp();
+            lucide.createIcons();
+        }
+
+        function updateProgressBar() {
+            const total = syllabus.length;
+            const completed = Object.keys(progressData).length;
+            const percentage = Math.round((completed / total) * 100);
+
+            const bar = document.getElementById('progressBar');
+            const text = document.getElementById('progressText');
+
+            bar.style.width = `${percentage}%`;
+            text.innerText = `${percentage}% Syllabus Done`;
+
+            if (percentage === 100) {
+                text.innerText = "TOPPER READY! 🏆";
+                triggerConfetti();
+            }
+        }
+
+        function scrollToToday() {
+            // Find today based on local date
+            const today = new Date();
+            const dateStr = `${today.getDate()} ${today.toLocaleString('default', { month: 'short' })}`;
+            
+            // Find the object
+            const todayItem = syllabus.find(s => s.date === dateStr);
+            
+            if (todayItem) {
+                const el = document.getElementById(`day-${todayItem.day}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Flash effect
+                    el.classList.add('ring-2', 'ring-white');
+                    setTimeout(() => el.classList.remove('ring-2', 'ring-white'), 1000);
+                }
+            } else {
+                // If date not in range (e.g., viewing now in 2024), scroll to Day 1
+                const el = document.getElementById(`day-1`);
+                if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // --- PWA LOGIC (Install Button) ---
+        let deferredPrompt;
+        function initPWA() {
+            const installBtn = document.getElementById('installBtn');
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.classList.remove('hidden');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    if (outcome === 'accepted') {
+                        installBtn.classList.add('hidden');
+                    }
+                } else {
+                    // Fallback instructions for manual install
+                    alert("To install:\n1. Click browser menu (⋮)\n2. Select 'Add to Home Screen' or 'Install App'");
+                }
+            });
+
+            // If already installed
+            window.addEventListener('appinstalled', () => {
+                installBtn.classList.add('hidden');
+            });
+        }
+
+        // --- CONFETTI EFFECT (Simple CSS/JS implementation) ---
+        function triggerConfetti() {
+            const colors = ['#f43f5e', '#ec4899', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.zIndex = '9999';
+                confetti.style.animation = `fall ${Math.random() * 2 + 3}s linear`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+        
+        // Add dynamic style for confetti
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes fall {
+                to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+    </script>
+</body>
+</html>
+
